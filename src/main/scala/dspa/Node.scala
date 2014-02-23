@@ -1,6 +1,6 @@
 package dspa
 
-import scala.collection.mutable.{Set, HashSet}
+import scala.collection.mutable.{Set, HashSet, ArrayBuffer}
 
 /**
  * Node is in charge of Node for graph search. 
@@ -27,8 +27,10 @@ class Node(val name: Any) {
 		override def toString(): String = name.toString
 }
 
+
 class GraphNode(val name: Int, val m_x: Float, val m_y: Float) {
     private val _edges:Set[GraphEdge] = new HashSet[GraphEdge]
+		var bw:baseWatchtower = null 
 
 		/*
 		 * m_x and m_y are x and y coordinates of Node.
@@ -40,7 +42,14 @@ class GraphNode(val name: Int, val m_x: Float, val m_y: Float) {
 		override def toString(): String = name.toString
 }
 
+
 class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
 								  val w:Float) {
 		override def toString(): String = name.toString
+
+		var bwList:ArrayBuffer[baseWatchtower] = new ArrayBuffer[baseWatchtower]
+
+    def addBW(bw:baseWatchtower){
+        bwList += bw 
+    }
 }
