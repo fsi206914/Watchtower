@@ -2,13 +2,16 @@ package dspa
 
 import scala.collection.mutable.{Set, HashSet}
 
+/**
+ * Node is in charge of Node for graph search. 
+ */
 class Node(val name: Any) {
     private val _edges:Set[Edge] = new HashSet[Edge]
     var distance = Double.MaxValue
     var visited = false
     var previous:Node = null
 
-    def addEdge(edge:Edge) {
+    def addEdge(edge:Edge){
         _edges += edge
     }
     
@@ -21,5 +24,23 @@ class Node(val name: Any) {
     	else return 0;
     }
 
+		override def toString(): String = name.toString
+}
+
+class GraphNode(val name: Int, val m_x: Float, val m_y: Float) {
+    private val _edges:Set[GraphEdge] = new HashSet[GraphEdge]
+
+		/*
+		 * m_x and m_y are x and y coordinates of Node.
+		 */
+    def addEdge(edge:GraphEdge){
+        _edges += edge
+    }
+    def edges = _edges.toList
+		override def toString(): String = name.toString
+}
+
+class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
+								  val w:Float) {
 		override def toString(): String = name.toString
 }
