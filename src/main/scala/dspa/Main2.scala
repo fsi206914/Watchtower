@@ -11,7 +11,8 @@ object Main2 {
 				//println(node);
 
 			val graph = Util.readGraph("cal.cnode", "cal.cedge");
-			println(graph(8).edges.length)
-
+			val lambda :Float = 0.001f
+			Deploy.anchorPointDeploy(graph, lambda)
+			println(Deploy.numBW);
     }
 }

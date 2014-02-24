@@ -3,6 +3,11 @@ import scala.collection.mutable._
 import scala.collection.Seq;
 import scala.io.Source
 
+
+/**
+ * Object Deploy is in charge of assigning base watchtowers evenly
+ * in the graph. 
+ */
 object Deploy{
 
 	var numBW = 0
@@ -10,7 +15,7 @@ object Deploy{
 	var currGraph: Map[Int, GraphNode] = null
 	var lambda:Float = 0
 
-	def AnchorPointDeploy(graph: Map[Int, GraphNode], aLambda: Float ){
+	def anchorPointDeploy(graph: Map[Int, GraphNode], aLambda: Float ){
 
 		currGraph = graph
 		lambda = aLambda
@@ -28,11 +33,14 @@ object Deploy{
 			for(edge <- node.edges){
 				setEdges(edge, lambda)
 			}
-
 		}
 	}
 
 
+	/*
+	 * setEdges is the method that it deploy watchtowers every lambda
+	 * distance along the edges.
+	 */
 	def setEdges(edge: GraphEdge, remain: Float){
 		
 		if(edgeVisited(edge.name) == false){
@@ -42,16 +50,20 @@ object Deploy{
 			else edgeVisited(edge.name-1) = true
 
 			var nextRemain = remain+edge.w
+
 			if(nextRemain > lambda){
 				nextRemain = setOneEdge(edge, remain)	
 			}
 
 			if(currGraph(edge.endNode).edges.length == 2 )
 				setEdges(nextEdge(edge), nextRemain)
-				
 		}
 	}
 
+	/*
+	 * construct watchtowers in edge and its reverse edge, append
+	 * watchtowers to edges.
+	 */
 	def setOneEdge(edge: GraphEdge, remain: Float) = {
 
 		var nextRemain = 0	
@@ -80,10 +92,10 @@ object Deploy{
 		retRemain
 	}
 
+
 	/**
 	 * In this case, expansion always meets 2-degree nodes.
 	 */
-
 	def nextEdge(edge: GraphEdge) = {
 		
 		val currStart = edge.startNode	
@@ -98,7 +110,6 @@ object Deploy{
 	/**
 	 * In our design scenario, undirected edges are composed an edge an reverse edge.
 	 */
-
 	def findReverseEdge(edge: GraphEdge) = {
 
 		val startNode = edge.startNode
@@ -108,5 +119,4 @@ object Deploy{
 		val t = node.edges.filter{case n => n.endNode == startNode}.toList
 		t.head
 	}
-
 }
