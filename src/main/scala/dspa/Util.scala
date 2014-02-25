@@ -22,7 +22,6 @@ object Util{
 	}
 
 	def readGraph(nodeFile:String, edgeFile:String) = {
-
 		/*
 		 * graph is a data structure for map, which maps NodeID to 
 		 * the target Node.
