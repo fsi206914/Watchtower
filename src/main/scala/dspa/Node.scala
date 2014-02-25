@@ -63,8 +63,25 @@ class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
 		override def toString(): String = name.toString
 
 		var bwList:ArrayBuffer[baseWatchtower] = new ArrayBuffer[baseWatchtower]
+		var wtList:ArrayBuffer[Watchtower] = new ArrayBuffer[Watchtower]
 
     def addBW(bw:baseWatchtower){
         bwList += bw 
     }
+
+    def addWT(wt:Watchtower){
+        wtList += wt 
+    }
+}
+
+class ObjectTuple(val objID: Int, var dist: Double){
+
+	def compareTo(that:ObjectTuple): Int ={
+		val ret = this.dist- that.dist;
+		if(ret < 0) return 1;
+		else if(ret > 0) return -1;
+		else return 0;
+	}
+
+	override def toString(): String = objID.toString + "  "+ dist.toString
 }

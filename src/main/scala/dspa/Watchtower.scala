@@ -11,7 +11,7 @@ class Watchtower(val ID: Int, val srcNode: Int, val srcCost: Float){
 	var objTuple: Map[Int, Double] = new HashMap[Int, Double]
 
 	def addObj(objID: Int, dist: Double) {
-		objTuple.put(objId, dist);	
+		objTuple.put(objID, dist);	
 	}
 }
 

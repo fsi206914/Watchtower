@@ -17,8 +17,8 @@ object Main2 {
 			val objectMap: Map[Int, Int] = Util.uniform(Config.numObj) 
 			SaveInfo.selectWatchtower(objectMap, graph, Config.Interval)
 
-
-
 			println(Deploy.numBW);
+			println(SaveInfo.wtCount);
+			Search.uniformSearch(34, graph, Config.Interval*lambda)
     }
 }

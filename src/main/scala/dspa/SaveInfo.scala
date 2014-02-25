@@ -2,8 +2,12 @@ package dspa
 import scala.collection.mutable._
 
 object SaveInfo{
+
+	val wtMap: Map[Int, Watchtower] = new HashMap[Int, Watchtower]
+	var wtCount = 0
 	
 	def selectWatchtower(objectMap: Map[Int, Int], graph: Map[Int, GraphNode], interval: Int) = {
+		wtCount = 0
 
 		/*
 		 * our selectwatchtower operation is embedded in the Dijkstra's Algorithm.
@@ -14,6 +18,7 @@ object SaveInfo{
 			val objectID = v
 
 			val queue = new PriorityQueue[GraphNode]()(QueueOrdering)
+			graph(startNode).distance = 0.0
 			queue += graph(startNode)
 
 			while(queue.nonEmpty){
@@ -29,8 +34,12 @@ object SaveInfo{
 					if(prev.bw != null){
 						prev.selectRemain += 1
 						if(prev.selectRemain >= interval){
-							prev.wt = new Watchtower(prev.bw)
-							prev.wt.addObj(objectID, prev.dist)
+							if(prev.wt == null)
+								prev.wt = new Watchtower(prev.bw)
+
+							prev.wt.addObj(objectID, prev.distance)
+							prev.selectRemain = 0
+							wtCount += 1
 						}
 					}
 
@@ -38,9 +47,7 @@ object SaveInfo{
 					 * set up watchtowers on edges.
 					 */
 
-					setInfoEdge(prev, node)
-
-					
+					node.selectRemain = setInfoEdge(prev, node, prev.selectRemain, interval, prev.distance, objectID)
 				}
 
 				if(!node.visited){
@@ -48,7 +55,7 @@ object SaveInfo{
 					for(edge <- node.edges){
 							
 						val otherNode = graph(edge.endNode)
-						if(otherNode.visited && otherNode.distance > node.distance + edge.w){
+						if(!otherNode.visited && otherNode.distance > node.distance + edge.w){
 							
 							otherNode.distance = node.distance + edge.w;
 							otherNode.previous = node
@@ -58,7 +65,6 @@ object SaveInfo{
 					
 					node.visited = true;
 				}
-				
 			}
 			
 			/*
@@ -69,23 +75,39 @@ object SaveInfo{
 				j.visited = false
 				j.previous = null
 			}
-
 		}
-		
 	}
 
-	def setInfoEdge(start: GraphNode, end: GraphNode) {
+	def setInfoEdge(start: GraphNode, end: GraphNode, initInterval: Int, interval: Int, initDist: Double, objID: Int): Int = {
 
 		val edge = findEdge(start, end);
 		val alterEdge = Deploy.findReverseEdge(edge);
+		var aggregateInterval = initInterval;
 
 		if(edge.bwList.length > 0){
-			
-			
+			for(bw <- edge.bwList){
+				aggregateInterval += 1
+
+				if(aggregateInterval >= interval){
+				
+					//  watchtowers are set up on the dge and the reverse edge	
+					var wt:Watchtower = null
+					if(!wtMap.contains(bw.ID)){
+						wt = new Watchtower(bw) 
+						edge.addWT(wt)
+						alterEdge.addWT(wt)
+					}
+					else
+						wt = wtMap(bw.ID)
+
+					wt.addObj(objID, initDist+bw.srcCost)
+					wtCount += 1
+					aggregateInterval= 0
+				}
+			}
 		}
-
+		aggregateInterval
 	}
-
 
 
 	def findEdge(start: GraphNode, end: GraphNode) = {
@@ -97,5 +119,4 @@ object SaveInfo{
 	def QueueOrdering = new Ordering[GraphNode] {
 		def compare(a:GraphNode, b:GraphNode) = a.compareTo(b)
 	}
-
 }
