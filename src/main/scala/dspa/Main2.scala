@@ -19,6 +19,6 @@ object Main2 {
 
 			println(Deploy.numBW);
 			println(SaveInfo.wtCount);
-			Search.uniformSearch(34, graph, Config.Interval*lambda)
+			Search.uniformSearch(34, graph, Config.Interval*lambda*2)
     }
 }
