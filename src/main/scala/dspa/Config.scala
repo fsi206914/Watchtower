@@ -6,4 +6,6 @@ object Config{
 	var numEdges = 0
 	val numObj = 10
 	val Interval= 100
+	val K = 5
+
 }

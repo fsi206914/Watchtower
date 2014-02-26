@@ -1,15 +1,15 @@
 package dspa
 import scala.collection.mutable._
+import scala.collection.immutable.List
 
 object Search{
 
 	var objMap: LinkedHashMap[Int, ObjectTuple] = null
-	//val objQueue: PriorityQueue[ObjectTuple] = null
 
-	def uniformSearch(queryPoint: Int, graph: Map[Int, GraphNode], expansion: Float) = {
+	def uniformSearch(queryPoint: Int, graph: Map[Int, GraphNode], expansion: Float, kNN: Int) = {
 
 		objMap = new LinkedHashMap[Int, ObjectTuple]
-		//objQueue = new PriorityQueue[ObjectTuple]()(objOrdering)
+
 		/*
 		 * our uniforma search operation is embedded in the Dijkstra's Algorithm.
 		 */
@@ -24,8 +24,8 @@ object Search{
 
 			if(node.name != queryPoint && break == false){
 				val prev = node.previous;
-				wtSearch(prev)
-				wtSearch(SaveInfo.findEdge(prev, node))
+				wtSearch(prev, prev.distance)
+				wtSearch(SaveInfo.findEdge(prev, node), prev.distance)
 			}
 
 			if(!node.visited && break==false){
@@ -50,25 +50,37 @@ object Search{
 			j.visited = false
 			j.previous = null
 		}
+
+		val objTupleList: List[ObjectTuple] = objMap.values.toList.sortBy(_.dist)
+		val kNNList = objTupleList.take( math.min(kNN, objTupleList.length))
+
+		println(kNNList);
 	}
 
-	def wtSearch(x: Any){x match{
-		case i: GraphNode => nodeSearch(i)	
-		case j: GraphEdge => edgeSearch(j)	
+	def wtSearch(x: Any, y: Double){x match{
+		case i: GraphNode => nodeSearch(i, y)	
+		case j: GraphEdge => edgeSearch(j, y)	
 	}}
 
 
-	def nodeSearch(node: GraphNode){
+	def nodeSearch(node: GraphNode, y: Double){
 
+		/*
+		 * v+y represents the diatance from query point to watchtower, watchtower to object.
+		 */
 		if(node.wt != null){
-			for( (k,v) <- node.wt.objTuple) update(k,v)
+			for( (k,v) <- node.wt.objTuple) update(k,v+y)
 		}
 	}
 
-	def edgeSearch(edge: GraphEdge){
+	def edgeSearch(edge: GraphEdge, y: Double){
 
+		/*
+		 * v+y represents the diatance from query point to srcNode next to watchtower, watchtower to object.
+		 * edge.w-wt.srcCost represents the distance from srcNode to Watchtower.
+		 */
 		for(wt<- edge.wtList){
-			for( (k,v) <- wt.objTuple) update(k,v)
+			for( (k,v) <- wt.objTuple) update(k, v + y + edge.w-wt.srcCost)
 		}
 	}
 
@@ -88,9 +100,5 @@ object Search{
 
 	def QueueOrdering = new Ordering[GraphNode] {
 		def compare(a:GraphNode, b:GraphNode) = a.compareTo(b)
-	}
-
-	def ObjOrdering = new Ordering[ObjectTuple] {
-		def compare(a:ObjectTuple, b:ObjectTuple) = a.compareTo(b)
 	}
 }
