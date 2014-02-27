@@ -13,5 +13,13 @@ class Watchtower(val ID: Int, val srcNode: Int, val srcCost: Float){
 	def addObj(objID: Int, dist: Double) {
 		objTuple.put(objID, dist);	
 	}
+
+	def rmObj(objID: Int) {
+		objTuple.remove(objID);	
+	}
+
+	def update(objID: Int, dist: Double) {
+		objTuple.update(objID,dist)
+	}
 }
 

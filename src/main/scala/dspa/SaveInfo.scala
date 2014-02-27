@@ -6,6 +6,7 @@ object SaveInfo{
 	val wtMap: Map[Int, Watchtower] = new HashMap[Int, Watchtower]
 	var wtCount = 0
 	
+
 	def selectWatchtower(objectMap: Map[Int, Int], graph: Map[Int, GraphNode], interval: Int) = {
 		wtCount = 0
 
@@ -78,8 +79,72 @@ object SaveInfo{
 		}
 	}
 
-	def setInfoEdge(start: GraphNode, end: GraphNode, initInterval: Int, interval: Int, initDist: Double, objID: Int): Int = {
 
+	def rmWatchtower(objTuple: (Int, Int), graph: Map[Int, GraphNode]) = {
+		wtCount = 0
+
+		/*
+		 * our selectwatchtower operation is embedded in the Dijkstra's Algorithm.
+		 */
+			
+			val startNode = objTuple._1
+			val objectID = objTuple._2
+
+			val queue = new PriorityQueue[GraphNode]()(QueueOrdering)
+			graph(startNode).distance = 0.0
+			queue += graph(startNode)
+
+			while(queue.nonEmpty){
+				val node= queue.dequeue
+
+				if(node.name != startNode){
+					val prev = node.previous;
+					if(prev == null) throw new Exception("prev can not be null")
+					
+					/*
+					 * if there's a watchtower in a node, we remove the object from the watchtower.
+					 */
+					if(prev.wt!= null)
+						prev.wt.rmObj(objectID);
+
+
+					/*
+					 * remove watchtowers on edge and its reverse edge.
+					 */
+					var edge = findEdge(prev,node)
+					edge.rmObj(objectID)
+					Deploy.findReverseEdge(edge).rmObj(objectID)
+				}
+
+				if(!node.visited){
+					
+					for(edge <- node.edges){
+							
+						val otherNode = graph(edge.endNode)
+						if(!otherNode.visited && otherNode.distance > node.distance + edge.w){
+							
+							otherNode.distance = node.distance + edge.w;
+							otherNode.previous = node
+							queue += otherNode
+						}
+					}
+					
+					node.visited = true;
+				}
+			}
+			
+			/*
+			 * re initialize attribute value in graphNode for next computation.
+			 */
+			for( (i,j) <- graph){
+				j.distance = Double.MaxValue
+				j.visited = false
+				j.previous = null
+			}
+	}
+
+
+	def setInfoEdge(start: GraphNode, end: GraphNode, initInterval: Int, interval: Int, initDist: Double, objID: Int): Int = {
 		val edge = findEdge(start, end);
 		val alterEdge = Deploy.findReverseEdge(edge);
 		var aggregateInterval = initInterval;

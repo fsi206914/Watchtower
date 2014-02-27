@@ -50,6 +50,10 @@ class GraphNode(val name: Int, val m_x: Float, val m_y: Float) {
         _edges -= edge
     }
 
+		def update(objID: Int, dist:Double){
+			wt.update(objID, dist)
+		}
+
     def edges = _edges.toList
 
     def compareTo(that: GraphNode): Int ={
@@ -78,6 +82,14 @@ class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
     def addWT(wt:Watchtower){
         wtList += wt 
     }
+
+		def rmObj(objID: Int){
+			for(wt <- wtList)wt.rmObj(objID)
+		}
+
+		def update(objID: Int, oriDist:Double){
+			for(wt <- wtList)wt.update(objID, oriDist + wt.srcCost);
+		}
 }
 
 class ObjectTuple(val objID: Int, var dist: Double){

@@ -20,5 +20,15 @@ object Main2 {
 			println(Deploy.numBW);
 			println(SaveInfo.wtCount);
 			Search.uniformSearch(34, graph, Config.Interval*lambda*2, Config.K)
+
+			time{ NaiveUpdate.AddEdge(graph, 2.0f, 1, 3, 0.1f, objectMap)}
     }
+
+		def time[R](block: => R): R = {
+			val t0 = System.nanoTime()
+				val result = block    // call-by-name
+				val t1 = System.nanoTime()
+				println("Elapsed time: " + (t1 - t0)/1000000 + "ms")
+				result
+		}
 }

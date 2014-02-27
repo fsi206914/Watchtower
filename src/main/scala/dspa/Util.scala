@@ -4,7 +4,6 @@ import scala.collection.Seq;
 import scala.io.Source
 
 object Util{
-	
 	def uniform(num: Int) = {
 		val numNode = Config.numNodes;
 		val division = numNode/(num+3);
