@@ -31,7 +31,7 @@ class Node(val name: Any) {
 /*
  * m_x and m_y are x and y coordinates of Node.
  */
-class GraphNode(val name: Int, val m_x: Float, val m_y: Float) {
+class GraphNode(val name: Int, val m_x: Float, val m_y: Float) extends Serializable{
 
     private val _edges:Set[GraphEdge] = new HashSet[GraphEdge]
     var distance = Double.MaxValue
@@ -68,7 +68,7 @@ class GraphNode(val name: Int, val m_x: Float, val m_y: Float) {
 
 
 class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
-								  val w:Float) {
+								  val w:Float) extends Serializable{
 
 		override def toString(): String = name.toString
 
@@ -92,7 +92,7 @@ class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
 		}
 }
 
-class ObjectTuple(val objID: Int, var dist: Double){
+class ObjectTuple(val objID: Int, var dist: Double) extends Serializable{
 
 	def compareTo(that:ObjectTuple): Int ={
 		val ret = this.dist- that.dist;

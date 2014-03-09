@@ -31,6 +31,8 @@ object Update{
 
 	def rmEdge(graph: Map[Int, GraphNode], expansion: Float, stNode: Int, endNode: Int, allObjMap: Map[Int, Int]){
 
+		println("graph(stNode) = " + graph(stNode).toString + " " + graph(stNode).edges.toString)
+		println("graph(endNode) = " + graph(endNode).toString + " " + graph(endNode).edges.toString)
 		var edge = SaveInfo.findEdge(graph(stNode), graph(endNode))
 		var reverseEdge = Deploy.findReverseEdge(edge)
 		graph(stNode).rmEdge(edge)
@@ -47,7 +49,6 @@ object Update{
 		graph(stNode).addEdge(edge)
 		graph(endNode).addEdge(reverseEdge)
 	}
-
 
 	def addObject(graph: Map[Int, GraphNode], objID: Int, stNode: Int){
 		val aObjMap: Map[Int, Int] = new HashMap[Int, Int]
@@ -69,7 +70,7 @@ object Update{
 		var break = false
 		while(queue.nonEmpty && break == false){
 			val node= queue.dequeue
-			if(node.distance > expansion) break = true;
+			//if(node.distance > expansion) break = true;
 
 			if(node.name != stNode && break == false){
 				val prev = node.previous;
