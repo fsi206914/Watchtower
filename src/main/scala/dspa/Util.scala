@@ -46,12 +46,11 @@ object Util{
 			val nb = graph(div(2).toInt)
 			val oriEdgeID = div(0).toInt
 
-			na.addEdge(new GraphEdge(oriEdgeID*2, na.name, 
+			na.addEdge(new GraphEdge(numEdges, na.name, 
 									nb.name, java.lang.Float.parseFloat(div(3))))
-			nb.addEdge(new GraphEdge(oriEdgeID*2 + 1, nb.name, 
+			nb.addEdge(new GraphEdge(numEdges + 1, nb.name, 
 									na.name, java.lang.Float.parseFloat(div(3))))
-			numEdges += 1
-			numEdges += 1
+			numEdges += 2
 		}
 
 		/*

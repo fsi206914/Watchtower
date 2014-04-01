@@ -1,11 +1,12 @@
 package dspa
 
 object Config{
-	
 	var numNodes = 0
 	var numEdges = 0
-	val numObj = 10
-	val Interval= 100
-	val K = 5
+	val numObj = 1000
+	val Interval= 1000
+	val K = 10
+	val bd = 320
 
+	val serialEnable = false
 }

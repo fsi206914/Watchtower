@@ -15,6 +15,9 @@ object Deploy{
 	var currGraph: Map[Int, GraphNode] = null
 	var lambda:Float = 0
 
+	var graphWeightSum = 0.0
+
+
 	def anchorPointDeploy(graph: Map[Int, GraphNode], aLambda: Float ){
 
 		currGraph = graph
@@ -71,7 +74,7 @@ object Deploy{
 		var endPos = edge.w
 		var startPos: Float = 0
 		var retRemain = remain
-
+		graphWeightSum += edge.w
 		while(startPos < endPos){
 			
 			val nextPos = startPos + lambda - retRemain 
@@ -101,11 +104,13 @@ object Deploy{
 		val currStart = edge.startNode	
 		val currEnd = edge.endNode
 		val node = currGraph(currEnd)
-
 		val t = node.edges.filter{case n => n.endNode != currStart}.toList
 		t.head
 	}
 
+	def printEdges(node: GraphNode){
+		for(e <- node.edges) println(e.toString)
+	}
 
 	/**
 	 * In our design scenario, undirected edges are composed an edge an reverse edge.
