@@ -22,7 +22,7 @@ object SaveInfo{
 			graph(startNode).distance = 0.0
 			queue += graph(startNode)
 
-			while(queue.nonEmpty){
+			while(queue.nonEmpty && queue.head.distance < Config.bd){
 				val node= queue.dequeue
 
 				if(node.name != startNode){

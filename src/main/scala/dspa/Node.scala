@@ -35,7 +35,7 @@ class GraphNode(val name: Int, val m_x: Float, val m_y: Float) extends Serializa
 
     private val _edges:Set[GraphEdge] = new HashSet[GraphEdge]
     var distance = Double.MaxValue
-		var bw: baseWatchtower = null 
+		@transient var bw: baseWatchtower = null 
 		var wt: Watchtower = null 
     var visited = false
     var previous: GraphNode= null
@@ -70,10 +70,9 @@ class GraphNode(val name: Int, val m_x: Float, val m_y: Float) extends Serializa
 class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
 								  val w:Float) extends Serializable{
 
-		override def toString(): String = name.toString
 
-		var bwList:ArrayBuffer[baseWatchtower] = new ArrayBuffer[baseWatchtower]
-		var wtList:ArrayBuffer[Watchtower] = new ArrayBuffer[Watchtower]
+	@transient var bwList:ArrayBuffer[baseWatchtower] = new ArrayBuffer[baseWatchtower]
+	@transient var wtList:ArrayBuffer[Watchtower] = new ArrayBuffer[Watchtower]
 
     def addBW(bw:baseWatchtower){
         bwList += bw 
@@ -83,13 +82,14 @@ class GraphEdge(val name: Int, val startNode: Int, val endNode: Int,
         wtList += wt 
     }
 
-		def rmObj(objID: Int){
-			for(wt <- wtList)wt.rmObj(objID)
-		}
+	def rmObj(objID: Int){
+		for(wt <- wtList)wt.rmObj(objID)
+	}
 
-		def update(objID: Int, oriDist:Double){
-			for(wt <- wtList)wt.update(objID, oriDist + wt.srcCost);
-		}
+	def update(objID: Int, oriDist:Double){
+		for(wt <- wtList)wt.update(objID, oriDist + wt.srcCost);
+	}
+    override def toString(): String = startNode.toString + "  "+ endNode.toString
 }
 
 class ObjectTuple(val objID: Int, var dist: Double) extends Serializable{

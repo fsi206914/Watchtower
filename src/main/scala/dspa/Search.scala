@@ -41,6 +41,8 @@ object Search{
 				node.visited = true;
 			}
 		}
+
+		println("The number of POI founded is " + objMap.size)
 		
 		/*
 		 * re initialize attribute value in graphNode for next computation.
